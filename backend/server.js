@@ -8,6 +8,8 @@ const app = express();
 app.use(bodyParser.json());
 app.use(express.json());
 app.use(cors());
+
+
 //create one db table with
 // const db = mysql.createConnection({
 //     host: "localhost",
@@ -15,7 +17,8 @@ app.use(cors());
 //     password: "----",//change all accordingly
 //     database:"User"
 // })
-//getting data using post method
+
+
 //defining routes
 app.post("/login", (req, res) => {
   if (req.body) {
