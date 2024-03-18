@@ -4,16 +4,22 @@ import Cookies from "js-cookie";
 import axios from "axios";
 
 const LoginForm = () => {
-    const [password, setPassword] = useState("");
+  const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [userIP, setUserIP] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
     return () => {
       Cookies.set("IsLoggedIn", "false");
-    }
-  },[])
+      //get client ip
+      fetch("https://api.ipify.org?format=json")
+        .then((response) => response.json())
+        .then((data) => setUserIP(data.ip))
+        .catch((error) => console.log(error));
+    };
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission
@@ -35,7 +41,7 @@ const LoginForm = () => {
 
     if (isValid) {
       try {
-        const userData = { username, password };
+        const userData = { username, password,userIP };
         const response = await axios.post(
           "http://localhost:3000/login",
           userData,
@@ -82,7 +88,7 @@ const LoginForm = () => {
             id="username"
             className="rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-blue-500 focus:ring-opacity-50"
             value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            onChange={(e) => setUsername(e.target.value.trim())}
           />
         </div>
 
