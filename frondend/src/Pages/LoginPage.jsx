@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import axios from "axios";
-
+import Home from "../assets/homepage.jpg";
 const LoginForm = () => {
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
@@ -41,7 +41,7 @@ const LoginForm = () => {
 
     if (isValid) {
       try {
-        const userData = { username, password,userIP };
+        const userData = { username, password, userIP };
         const response = await axios.post(
           "http://localhost:3000/login",
           userData,
@@ -72,49 +72,56 @@ const LoginForm = () => {
   };
 
   return (
-    <div className="mx-auto">
-      <form
-        onSubmit={handleSubmit}
-        className="flex flex-row justify-center items-center space-x-4"
-      >
-        {/* Error message (optional) */}
-
-        <div className="flex flex-row">
-          <label htmlFor="username" className="text-sm font-medium pt-3 px-2">
-            Username<span className="text-red-400">*</span>
-          </label>
-          <input
-            type="text"
-            id="username"
-            className="rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-blue-500 focus:ring-opacity-50"
-            value={username}
-            onChange={(e) => setUsername(e.target.value.trim())}
-          />
-        </div>
-
-        <div className="flex flex-row">
-          <label htmlFor="password" className="text-sm font-medium pt-3 px-2">
-            Password
-          </label>
-          <input
-            type="password"
-            id="password"
-            className="rounded-lg border border-gray-300 px-3 py-2 focus:outline-none focus:ring-blue-500 focus:ring-opacity-50"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-
-        <button
-          type="submit"
-          className="bg-green-500 hover:bg-green-700 text-white  py-2 px-4 rounded-lg shadow"
+    <div className=" flex justify-center items-center ">
+      <div className="flex-col ">
+        <form
+          onSubmit={handleSubmit}
+          className="flex  justify-center items-center space-x-4"
         >
-          SIGN IN
-        </button>
-      </form>
-      {errorMessage && (
-        <div className="  my-4 text-red-500 text-center">{errorMessage}</div>
-      )}
+          {/* Error message (optional) */}
+
+          <div className=" flex-row">
+            <label htmlFor="username" className="text-sm font-medium pt-3 px-2">
+              Username<span className="text-red-400">*</span>
+            </label>
+            <input
+              type="text"
+              id="username"
+              className="rounded-lg border text-sm border-gray-300 px-3 py-2 focus:outline-none focus:ring-blue-500 focus:ring-opacity-50"
+              value={username}
+              onChange={(e) => setUsername(e.target.value.trim())}
+            />
+          </div>
+
+          <div className="flex-row">
+            <label htmlFor="password" className="text-sm font-medium pt-3 px-2">
+              Password
+            </label>
+            <input
+              type="password"
+              id="password"
+              className="rounded-lg border text-sm border-gray-300 px-3 py-2 focus:outline-none focus:ring-blue-500 focus:ring-opacity-50"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="bg-green-500 hover:bg-green-700 text-white text-sm  py-2 px-4 rounded-lg shadow"
+          >
+            SIGN IN
+          </button>
+        </form>
+        {errorMessage && (
+          <div className="  my-4 text-red-500 text-center">{errorMessage}</div>
+        )}
+        <img
+          src={Home}
+          className="flex-col  py-2 w-full "
+          alt="home page Wateen"
+        />
+      </div>
     </div>
   );
 };
