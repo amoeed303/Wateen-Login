@@ -39,11 +39,93 @@ app.post("/login", (req, res) => {
             if (stderr) {
               console.error(`stderr: ${stderr}`);
             }
-            console.log(`stdout: ${stdout}`);
+            //printing the executed ccommand output in desired output
             if (stdout.includes("Received CoA-ACK")) {
-              return res.status(200).json({ success: "CoA-ACK received" });
-            } else {
-              return res.status(400).json({ error: "CoA-ACK not received" });
+              const lines = stdout.split("\n");
+              let userName,
+                framedIPAddress,
+                acctSessionId,
+                nasIdentifier,
+                nasPortId,
+                idleTimeout,
+                huaweiCommandMode;
+
+              lines.forEach((line) => {
+                if (line.includes("User-Name")) {
+                  userName = line.split("=")[1].trim();
+                } else if (line.includes("Framed-IP-Address")) {
+                  framedIPAddress = line.split("=")[1].trim();
+                } else if (line.includes("Acct-Session-Id")) {
+                  acctSessionId = line.split("=")[1].trim();
+                } else if (line.includes("NAS-Identifier")) {
+                  nasIdentifier = line.split("=")[1].trim();
+                } else if (line.includes("NAS-Port-Id")) {
+                  nasPortId = line.split("=")[1].trim();
+                } else if (line.includes("Idle-Timeout")) {
+                  idleTimeout = line.split("=")[1].trim();
+                } else if (line.includes("Huawei-Command-Mode")) {
+                  huaweiCommandMode = line.split("=")[1].trim();
+                }
+              });
+
+              // Constructing the message for CoA-ACK
+              const message = `
+    Received CoA-ACK:
+      User-Name: ${userName}
+      Framed-IP-Address: ${framedIPAddress}
+      Acct-Session-Id: ${acctSessionId}
+      NAS-Identifier: ${nasIdentifier}
+      NAS-Port-Id: ${nasPortId}
+      Idle-Timeout: ${idleTimeout}
+      Huawei-Command-Mode: ${huaweiCommandMode}
+  `;
+
+              console.log(message); // Output the constructed message
+            } else if (stdout.includes("Received CoA-NAK")) {
+              const lines = stdout.split("\n");
+              let userName,
+                framedIPAddress,
+                acctSessionId,
+                nasIdentifier,
+                nasPortId,
+                delegatedIPv6Prefix,
+                huaweiCommandMode,
+                errorCause;
+
+              lines.forEach((line) => {
+                if (line.includes("User-Name")) {
+                  userName = line.split("=")[1].trim();
+                } else if (line.includes("Framed-IP-Address")) {
+                  framedIPAddress = line.split("=")[1].trim();
+                } else if (line.includes("Acct-Session-Id")) {
+                  acctSessionId = line.split("=")[1].trim();
+                } else if (line.includes("NAS-Identifier")) {
+                  nasIdentifier = line.split("=")[1].trim();
+                } else if (line.includes("NAS-Port-Id")) {
+                  nasPortId = line.split("=")[1].trim();
+                } else if (line.includes("Delegated-IPv6-Prefix")) {
+                  delegatedIPv6Prefix = line.split("=")[1].trim();
+                } else if (line.includes("Huawei-Command-Mode")) {
+                  huaweiCommandMode = line.split("=")[1].trim();
+                } else if (line.includes("Error-Cause")) {
+                  errorCause = line.split("=")[1].trim();
+                }
+              });
+
+              // Constructing the message for CoA-NAK
+              const message = `
+    Received CoA-NAK:
+      User-Name: ${userName}
+      Framed-IP-Address: ${framedIPAddress}
+      Acct-Session-Id: ${acctSessionId}
+      NAS-Identifier: ${nasIdentifier}
+      NAS-Port-Id: ${nasPortId}
+      Delegated-IPv6-Prefix: ${delegatedIPv6Prefix}
+      Huawei-Command-Mode: ${huaweiCommandMode}
+      Error-Cause: ${errorCause}
+  `;
+
+              console.log(message); // Output the constructed message
             }
           });
         } else {

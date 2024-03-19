@@ -65,7 +65,7 @@ const LoginForm = () => {
       } catch (error) {
         console.log("Error logging in:", error);
         setErrorMessage(
-          "Login failed. Please check your username and password."
+          "Invalid Username/Password. Please try again or call Wateen Contact Center at 111 365 111 for assistance"
         ); // Display user-friendly error message
       }
     }
