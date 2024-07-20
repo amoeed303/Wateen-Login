@@ -1,23 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
-import axios from "axios";
 import Home from "../assets/homepage.jpg";
 const LoginForm = () => {
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
+  const userIP = " ";
   const [errorMessage, setErrorMessage] = useState("");
-  const [userIP, setUserIP] = useState("");
+  
   const navigate = useNavigate();
 
   useEffect(() => {
     return () => {
       Cookies.set("IsLoggedIn", "false");
-      //get client ip
-      fetch("https://api.ipify.org?format=json")
-        .then((response) => response.json())
-        .then((data) => setUserIP(data.ip))
-        .catch((error) => console.log(error));
     };
   }, []);
 
@@ -38,20 +33,25 @@ const LoginForm = () => {
       isValid = false;
       setErrorMessage("Password must be at least 6 characters long.");
     }
-
+    console.log(isValid)
+    console.log(username,password)
     if (isValid) {
       try {
-        const userData = { username, password, userIP };
-        const response = await axios.post(
-          "http://localhost:3000/login",
-          userData,
-          { headers: { "Content-Type": "application/json" } }
-        );
+        const userData = { username, password ,userIP};
+        console.log(userData);
+        const response = await fetch("http://localhost:3000/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(userData),
+        });
         alert("Sent");
 
         if (response.status === 200) {
           console.log("Login successful!");
-          Cookies.set("IsLoggedIn", "true"); //set cookie for protected route
+          Cookies.set("IsLoggedIn", "true");
+          alert("login successful")//set cookie for protected route
           setUsername("");
           setPassword("");
 
